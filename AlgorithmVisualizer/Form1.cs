@@ -16,6 +16,7 @@ namespace AlgorithmVisualizer
         #region Fields
         int[] arrayOfNumbers;
         int numEntries;
+        int maxNumberOfEntries;
         int maxValue;
         Graphics g;
         #endregion
@@ -36,15 +37,34 @@ namespace AlgorithmVisualizer
         private void LoadDefault()
         {
             // At first initialization the number of entries and their maximum number is defined by the width and height of the panel.
-            numEntries = panelGraphic.Width / 2;
+            maxNumberOfEntries = panelGraphic.Width / 2;
             maxValue = panelGraphic.Height;
+            // Default number of Entries.
+            numEntries = maxNumberOfEntries / 2;
             trackBarSpeed.SetRange(1, panelGraphic.Width / 2);
-            trackBarSpeed.Value = numEntries / 2;
+            trackBarSpeed.Value = numEntries;
+            textBoxSpeed.Text = numEntries.ToString();
+
+            int[] randomValues = CreateRandomValues();
         }
         // Create Random Values and Bars.
-        private void CreateRandomValuesBars()
+        private int[] CreateRandomValues()
         {
-            // If the arrayOfNumbers is empty recreate the entire array of values. 
+            // Creating a random array of values.
+            int[] arrayOfNumbers = new int[numEntries];
+            Random random = new Random();
+            for (int i = 0; i < numEntries; i++)
+                arrayOfNumbers[i] = random.Next(maxValue);
+            this.arrayOfNumbers = arrayOfNumbers;
+
+            return arrayOfNumbers;
+        }
+        // Draw a rectangle every random value.
+        private void DrawRectangle(int[] arrayOfNumbers)
+        {
+            // Compute the width dimension of each rectangle.
+            int rectangleWidth = panelGraphic.Width / numEntries;
+
 
         }
         #endregion
@@ -65,27 +85,34 @@ namespace AlgorithmVisualizer
             int maxValue = this.maxValue;
             // Initialize the background of the panel to the black color.
             g.FillRectangle(new SolidBrush(Color.Black), 0, 0, panelGraphic.Width, panelGraphic.Height);
-            // Creating a random array of values.
-            arrayOfNumbers = new int[numEntries];
-            Random random = new Random();
-            for (int i = 0; i < numEntries; i++)
-                arrayOfNumbers[i] = random.Next(maxValue);
-
-            // Retrieve the width of each of the bar/rectangle.
-            int rectangleWidth = (int)(panelGraphic.Width / numEntries != 0 ? numEntries : 1);
-            // Drawing a bars for each of the random number in the array.
-            for (int i = 0; i < numEntries; i++)
-            {
-                // Retrieve the dimension of each of the bar.
-                //g.DrawRectangle(new SolidBrush(Color.White), new Rectangle());
-            }
+            // Create the random array of values
+            int[] arrayOfNumbers = CreateRandomValues();
         }
         // Action to be performed when the scroll bar changes value.
         private void trackBarSpeed_Scroll(object sender, EventArgs e)
         {
+            // Reset the number of entries.
             this.numEntries = trackBarSpeed.Value;
-            
-            CreateRandomValuesBars();
+            // Update the TextBoxEdit if necessary
+            if (int.Parse(textBoxSpeed.Text) != trackBarSpeed.Value)
+                textBoxSpeed.Text = trackBarSpeed.Value.ToString();
+
+            _ = CreateRandomValues();
+        }
+
+        private void textBoxSpeed_TextChanged(object sender, EventArgs e)
+        {
+            // Check if the input value is correct.
+            int intTextBoxValue = -1;
+            bool isTextBoxInteger = int.TryParse(textBoxSpeed.Text, out intTextBoxValue);
+
+            if (isTextBoxInteger == false || intTextBoxValue < 1 || intTextBoxValue > trackBarSpeed.Maximum)
+                textBoxSpeed.Text = trackBarSpeed.Value.ToString();
+            else
+            {
+                if (intTextBoxValue != trackBarSpeed.Value)
+                    trackBarSpeed.Value = intTextBoxValue;
+            }
         }
         #endregion
     }

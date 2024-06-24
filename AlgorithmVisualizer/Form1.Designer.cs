@@ -39,6 +39,7 @@
             this.trackBarSpeed = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonSort = new System.Windows.Forms.Button();
+            this.textBoxSpeed = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSpeed)).BeginInit();
             this.SuspendLayout();
@@ -119,7 +120,7 @@
             this.trackBarSpeed.AutoSize = false;
             this.trackBarSpeed.Location = new System.Drawing.Point(562, 39);
             this.trackBarSpeed.Name = "trackBarSpeed";
-            this.trackBarSpeed.Size = new System.Drawing.Size(320, 27);
+            this.trackBarSpeed.Size = new System.Drawing.Size(276, 27);
             this.trackBarSpeed.TabIndex = 5;
             this.trackBarSpeed.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarSpeed.Scroll += new System.EventHandler(this.trackBarSpeed_Scroll);
@@ -142,11 +143,20 @@
             this.buttonSort.Text = "Sort";
             this.buttonSort.UseVisualStyleBackColor = true;
             // 
+            // textBoxSpeed
+            // 
+            this.textBoxSpeed.Location = new System.Drawing.Point(835, 42);
+            this.textBoxSpeed.Name = "textBoxSpeed";
+            this.textBoxSpeed.Size = new System.Drawing.Size(47, 22);
+            this.textBoxSpeed.TabIndex = 8;
+            this.textBoxSpeed.TextChanged += new System.EventHandler(this.textBoxSpeed_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1001, 498);
+            this.Controls.Add(this.textBoxSpeed);
             this.Controls.Add(this.buttonSort);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.trackBarSpeed);
@@ -179,6 +189,7 @@
         private System.Windows.Forms.TrackBar trackBarSpeed;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonSort;
+        private System.Windows.Forms.TextBox textBoxSpeed;
     }
 }
 
