@@ -63,9 +63,17 @@ namespace AlgorithmVisualizer
         private void DrawRectangle(int[] arrayOfNumbers)
         {
             // Compute the width dimension of each rectangle.
-            int rectangleWidth = panelGraphic.Width / numEntries;
+            int rectangleWidth = (int)(panelGraphic.Width - (panelGraphic.Width * 0.1) / numEntries);
 
+            //   x: The x-coordinate of the upper-left corner of the rectangle.
+            //   y: The y-coordinate of the upper-left corner of the rectangle.
+            //   width: The width of the rectangle.
+            //   height: The height of the rectangle.
 
+            for (int i = 0; i < arrayOfNumbers.Length; i++)
+            {
+                g.FillRectangle(new SolidBrush, i)
+            }
         }
         #endregion
 
