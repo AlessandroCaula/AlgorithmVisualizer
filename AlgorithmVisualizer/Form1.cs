@@ -72,7 +72,7 @@ namespace AlgorithmVisualizer
 
             for (int i = 0; i < arrayOfNumbers.Length; i++)
             {
-                g.FillRectangle(new SolidBrush, i)
+                //g.FillRectangle(new SolidBrush, i)
             }
         }
         #endregion
