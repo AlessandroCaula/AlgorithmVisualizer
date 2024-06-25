@@ -20,6 +20,8 @@ namespace AlgorithmVisualizer
         int maxNumberOfEntries;
         int maxValue;
         Graphics g;
+
+        bool isFormSizeChanged;
         #endregion
 
         #region Properties
@@ -46,8 +48,9 @@ namespace AlgorithmVisualizer
             trackBarSpeed.Value = numEntries;
             textBoxSpeed.Text = numEntries.ToString();
 
+            this.isFormSizeChanged = false;
             // Create a graphic subject on the Form.
-            g = panelGraphic.CreateGraphics();
+            //g = panelGraphic.CreateGraphics();
             //int[] randomValues = CreateRandomValues();
             //DrawRectangle(randomValues);
         }
@@ -101,7 +104,7 @@ namespace AlgorithmVisualizer
                     increaseWidth = rectangleWidth;
                     count = 0;
                 }
-                g.FillRectangle(new SolidBrush(Color.Blue), totalWidthUsed, 0, rectangleWidth + increaseWidth, arrayOfNumbers[i]); // + paddingFromPanel
+                g.FillRectangle(new SolidBrush(Color.Blue), totalWidthUsed, panelGraphic.Height - arrayOfNumbers[i], rectangleWidth + increaseWidth, panelGraphic.Height); // + paddingFromPanel
                 count++;
                 totalWidthUsed += rectangleWidth + increaseWidth;
             }
@@ -117,6 +120,9 @@ namespace AlgorithmVisualizer
         // Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         private void buttonReset_Click(object sender, EventArgs e)
         {
+            if (isFormSizeChanged)
+                LoadDefault();
+
             g = panelGraphic.CreateGraphics();
             // Set constraints for the numbers of random numbers created and the maximum values that can have based on the panel properties.
             int numEntries = this.numEntries;
@@ -158,6 +164,16 @@ namespace AlgorithmVisualizer
                 if (intTextBoxValue != trackBarSpeed.Value)
                     trackBarSpeed.Value = intTextBoxValue;
             }
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+
+            if (this.arrayOfNumbers != null)
+                DrawRectangle(this.arrayOfNumbers);
+
+            this.isFormSizeChanged = true;
         }
         #endregion
     }
