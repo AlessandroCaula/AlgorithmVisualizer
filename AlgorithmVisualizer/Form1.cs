@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Runtime.CompilerServices;
 
 namespace AlgorithmVisualizer
 {
@@ -20,7 +12,6 @@ namespace AlgorithmVisualizer
         int maxNumberOfEntries;
         int maxValue;
         Graphics g;
-
         bool isFormSizeChanged;
         #endregion
 
@@ -43,16 +34,13 @@ namespace AlgorithmVisualizer
             maxNumberOfEntries = panelGraphic.Width;
             maxValue = panelGraphic.Height;
             // Default number of Entries.
-            numEntries = maxNumberOfEntries / 2;
+            numEntries = maxNumberOfEntries;
             trackBarSpeed.SetRange(1, maxNumberOfEntries);
-            trackBarSpeed.Value = numEntries;
-            textBoxSpeed.Text = numEntries.ToString();
-
+            trackBarSpeed.Value = maxNumberOfEntries;
+            textBoxSpeed.Text = maxNumberOfEntries.ToString();
             this.isFormSizeChanged = false;
-            // Create a graphic subject on the Form.
-            //g = panelGraphic.CreateGraphics();
-            //int[] randomValues = CreateRandomValues();
-            //DrawRectangle(randomValues);
+
+            g = panelGraphic.CreateGraphics();
         }
         // Create Random Values and Bars.
         private int[] CreateRandomValues()
@@ -66,15 +54,8 @@ namespace AlgorithmVisualizer
 
             return arrayOfNumbers;
         }
-
-        // Compute the ActualNumberOfEntries based on the dimension and space available in the panel. 
-        private void ComputeActualNumberOfEntries()
-        {
-
-        }
-
-        // Draw a rectangle every random value.
-        private void DrawRectangle(int[] arrayOfNumbers)
+        // Draw the random values.
+        private void DrawRectangle1(int[] arrayOfNumbers)
         {
             g = panelGraphic.CreateGraphics();
 
@@ -82,32 +63,29 @@ namespace AlgorithmVisualizer
             panelGraphic.Update();
 
             // Compute the width dimension of each rectangle.
-            int rectangleWidth = (int)(Math.Round(panelGraphic.Width / (double)numEntries));
+            int rectangleWidth = (int)(Math.Round(panelGraphic.Width / (double)numEntries)) != 0 ? (int)(Math.Round(panelGraphic.Width / (double)numEntries)) : 1;
             // Compute the residual, not used pixels in the panel.
             int residualPixels = panelGraphic.Width - (numEntries * rectangleWidth);
-            // Find to how many rectangle I can increase the dimension.
-            int nIncreasedDimRectangle = (int)(Math.Floor(residualPixels / (double)rectangleWidth));
-            // Compute every how many rectangle increase the dimension of one rectangle.
-            int increaseFreq = (int)(Math.Ceiling(this.numEntries / (double)nIncreasedDimRectangle));
+            // Divide the residual pixels so that half of them will be the padding from the side borders of the panel.
+            int paddingFromSideMargins = residualPixels / 2;
 
-            //   X: The x-coordinate of the upper-left corner of the rectangle.
-            //   Y: The y-coordinate of the upper-left corner of the rectangle.
-            //   Width: The width of the rectangle.
-            //   Height: The height of the rectangle.
-            int count = 0;
-            int totalWidthUsed = 0;
+            // X: The x-coordinate of the upper-left corner of the rectangle. Y: The y-coordinate of the upper-left corner of the rectangle.
+            // Width: The width of the rectangle. Height: The height of the rectangle.
             for (int i = 0; i < arrayOfNumbers.Length; i++)
             {
-                int increaseWidth = 0;
-                if (count == increaseFreq)
-                {
-                    increaseWidth = rectangleWidth;
-                    count = 0;
-                }
-                g.FillRectangle(new SolidBrush(Color.Blue), totalWidthUsed, panelGraphic.Height - arrayOfNumbers[i], rectangleWidth + increaseWidth, panelGraphic.Height); // + paddingFromPanel
-                count++;
-                totalWidthUsed += rectangleWidth + increaseWidth;
+                g.FillRectangle(new SolidBrush(Color.Blue), (i * rectangleWidth) + paddingFromSideMargins, panelGraphic.Height - arrayOfNumbers[i], rectangleWidth, panelGraphic.Height); // + paddingFromPanel
             }
+        }
+        // Reset and recall the creation and drawn of the random values.
+        private void ResetAndRedrawnValues()
+        {
+            if (isFormSizeChanged)
+                LoadDefault();
+
+            g.Dispose();
+            // Create the random array of values and draw them.
+            int[] arrayOfNumbers = CreateRandomValues();
+            DrawRectangle1(arrayOfNumbers);
         }
         #endregion
 
@@ -120,16 +98,7 @@ namespace AlgorithmVisualizer
         // Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            if (isFormSizeChanged)
-                LoadDefault();
-
-            g = panelGraphic.CreateGraphics();
-            // Set constraints for the numbers of random numbers created and the maximum values that can have based on the panel properties.
-            int numEntries = this.numEntries;
-            int maxValue = this.maxValue;
-            // Create the random array of values and draw them.
-            int[] arrayOfNumbers = CreateRandomValues();
-            DrawRectangle(arrayOfNumbers);
+            ResetAndRedrawnValues();
         }
         // Action to be performed when the scroll bar changes value.
         private void trackBarSpeed_Scroll(object sender, EventArgs e)
@@ -137,18 +106,12 @@ namespace AlgorithmVisualizer
             // Update the numberOfentries based on the trackBarValue.
             this.numEntries = trackBarSpeed.Value;
 
-            //ComputeActualNumberOfEntries();
-
-            // Reset the number of entries.
-            //trackBarSpeed.Value = this.numEntries;
-
             // Update the TextBoxEdit if necessary
             if (int.Parse(textBoxSpeed.Text) != trackBarSpeed.Value)
                 textBoxSpeed.Text = trackBarSpeed.Value.ToString();
 
             // Re-create and re-draw the rectangles.
-            int[] arrayOfNumbers = CreateRandomValues();
-            DrawRectangle(arrayOfNumbers);
+            ResetAndRedrawnValues();
         }
         // Action to be performed when the TextBox value has changed.
         private void textBoxSpeed_TextChanged(object sender, EventArgs e)
@@ -162,18 +125,23 @@ namespace AlgorithmVisualizer
             else
             {
                 if (intTextBoxValue != trackBarSpeed.Value)
+                {
                     trackBarSpeed.Value = intTextBoxValue;
+                    trackBarSpeed_Scroll(sender, e);
+                }
             }
         }
-
+        // Action performed when the size of the form has changed.
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
 
-            if (this.arrayOfNumbers != null)
-                DrawRectangle(this.arrayOfNumbers);
+            //if (this.arrayOfNumbers != null)
+            //    DrawRectangle1(this.arrayOfNumbers);
 
             this.isFormSizeChanged = true;
+            // Every time that the dimension of the form changes, recompute the array of values.
+            ResetAndRedrawnValues();
         }
         #endregion
     }
