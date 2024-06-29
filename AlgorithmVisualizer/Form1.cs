@@ -24,6 +24,10 @@ namespace AlgorithmVisualizer
             InitializeComponent();
 
             LoadDefault();
+
+            // Just For TEST
+            BubbleSortEngine b = new BubbleSortEngine();
+            b.DoWork(new int[0], g, 0);
         }
         #endregion
 
@@ -73,7 +77,7 @@ namespace AlgorithmVisualizer
             // Width: The width of the rectangle. Height: The height of the rectangle.
             for (int i = 0; i < arrayOfNumbers.Length; i++)
             {
-                g.FillRectangle(new SolidBrush(Color.Blue), (i * rectangleWidth) + paddingFromSideMargins, panelGraphic.Height - arrayOfNumbers[i], rectangleWidth, panelGraphic.Height); // + paddingFromPanel
+                g.FillRectangle(new SolidBrush(Color.DarkGray), (i * rectangleWidth) + paddingFromSideMargins, panelGraphic.Height - arrayOfNumbers[i], rectangleWidth, panelGraphic.Height); // + paddingFromPanel
             }
         }
         // Reset and recall the creation and drawn of the random values.
