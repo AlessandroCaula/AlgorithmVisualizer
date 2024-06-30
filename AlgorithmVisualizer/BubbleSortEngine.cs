@@ -16,6 +16,8 @@ namespace AlgorithmVisualizer
         private Graphics g;
         int[] valuesArray;
         int maxValue;
+        SolidBrush redBrush;
+        SolidBrush greenBrush;
         
         
         /// <summary>
@@ -26,20 +28,21 @@ namespace AlgorithmVisualizer
         /// It can be optimized by stopping the algorithm if the inner loop didn’t cause any swap. 
         /// Time Complexity: O(N2). Auxiliary Space: O(1).
         /// </summary>
-        public void DoWork(int[] valuesArray, Graphics g, int maxValue)
+        public void DoWork(int[] valuesArray, Graphics g, int maxValue, int rectangleWidth, int paddingFromSideMargins, int panelHeight)
         {
             this.maxValue = maxValue;
             this.valuesArray = valuesArray;
             this.g = g;
+            redBrush = new SolidBrush(Color.LightCoral);
+            greenBrush = new SolidBrush(Color.LightGreen);
 
-            // TEST 
-            valuesArray = new int[] { 0, 3, 2, 1 };
-
+            int iteration = 0;
+            bool swapOccurred;
             // Loop through the length of the entire array.
             for (int i = valuesArray.Length; i >= 0; i--)
             {
                 // Flag for checking whether no swaps have occurred during this cycle, meaning that all the elements are already sorted.
-                bool swapOccurred = false;
+                swapOccurred = false;
 
                 // Loop through all the elements before the current one (element at i). 
                 for (int j = 0; j < i; j++)
@@ -56,7 +59,17 @@ namespace AlgorithmVisualizer
                         valuesArray[j] = tempVal;
                         // Set to True the Flag. A swap has occured.
                         swapOccurred = true;
+
+                        // Updating the bars on the screen to reflect what happend. 
+                        // Drawing the coloured rectangles as the background color (white). 
+                        g.FillRectangle(new SolidBrush(Color.White), ((j - 1) * rectangleWidth) + paddingFromSideMargins, 0, rectangleWidth * 2, panelHeight);
+                        // Repainintg the new temporary sorted bar.
+                        g.FillRectangle(new SolidBrush(Color.LightCoral), ((j - 1) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j - 1], rectangleWidth, panelHeight);
+                        g.FillRectangle(new SolidBrush(Color.LightCoral), (j * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j], rectangleWidth, panelHeight);
                     }
+
+                    iteration++;
+                    // 268088
                 }
 
                 // Check if no swapped have occurred, therefore the Array has been completely sorted.
