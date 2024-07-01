@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace AlgorithmVisualizer
 {
-    public partial class Form1 : Form
+    public partial class Form : System.Windows.Forms.Form
     {
         #region Fields
         int[] arrayOfNumbers;
@@ -19,7 +19,7 @@ namespace AlgorithmVisualizer
         #endregion
 
         #region Constructor
-        public Form1()
+        public Form()
         {
             InitializeComponent();
 
