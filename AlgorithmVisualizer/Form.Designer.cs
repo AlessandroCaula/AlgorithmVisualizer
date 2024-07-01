@@ -142,6 +142,7 @@
             this.buttonSort.TabIndex = 7;
             this.buttonSort.Text = "Sort";
             this.buttonSort.UseVisualStyleBackColor = true;
+            this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
             // 
             // textBoxSpeed
             // 
