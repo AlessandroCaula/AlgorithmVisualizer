@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AlgorithmVisualizer
@@ -13,13 +14,28 @@ namespace AlgorithmVisualizer
     /// </summary>
     class BubbleSortEngine : ISortEngine
     {
+        #region Fields
         private Graphics g;
         int[] valuesArray;
         int maxValue;
         SolidBrush redBrush;
         SolidBrush greenBrush;
-        
-        
+        SolidBrush grayBrush;
+        SolidBrush whiteBrush;
+        #endregion
+
+
+        #region Properties
+        public bool IsToStopSorting { get; set; }
+        #endregion
+
+
+        #region Constructor
+        public BubbleSortEngine() { }
+        #endregion
+
+
+        #region Methods
         /// <summary>
         /// 1) Traverse from left and compare adjacent elements and the higher one is placed at right side. 
         /// 2) In this way, the largest element is moved to the rightmost end at first. 
@@ -33,20 +49,31 @@ namespace AlgorithmVisualizer
             this.maxValue = maxValue;
             this.valuesArray = valuesArray;
             this.g = g;
-            redBrush = new SolidBrush(Color.LightCoral);
-            greenBrush = new SolidBrush(Color.LightGreen);
+            this.redBrush = new SolidBrush(Color.LightCoral);
+            this.greenBrush = new SolidBrush(Color.LightGreen);
+            this.grayBrush = new SolidBrush(Color.DarkGray);
+            this.whiteBrush = new SolidBrush(Color.White);
+            this.IsToStopSorting = false;
+            int prevHigherValIdx = 0;
 
-            int iteration = 0;
             bool swapOccurred;
             // Loop through the length of the entire array.
             for (int i = valuesArray.Length; i >= 0; i--)
             {
                 // Flag for checking whether no swaps have occurred during this cycle, meaning that all the elements are already sorted.
                 swapOccurred = false;
+                prevHigherValIdx = 0;
 
                 // Loop through all the elements before the current one (element at i). 
                 for (int j = 0; j < i; j++)
                 {
+                    Thread.Sleep(5);
+
+                    // Check whether the Stop button is clicked, and the sorting must be stopped.
+                    if (this.IsToStopSorting)
+                        return;
+
+                    // Continue to the next index when j equal to 0.
                     if (j == 0)
                         continue;
 
@@ -57,25 +84,59 @@ namespace AlgorithmVisualizer
                         int tempVal = valuesArray[j - 1];
                         valuesArray[j - 1] = valuesArray[j];
                         valuesArray[j] = tempVal;
-                        // Set to True the Flag. A swap has occured.
+                        // Set to True the Flag. A swap has occurred.
                         swapOccurred = true;
 
-                        // Updating the bars on the screen to reflect what happend. 
-                        // Drawing the coloured rectangles as the background color (white). 
-                        g.FillRectangle(new SolidBrush(Color.White), ((j - 1) * rectangleWidth) + paddingFromSideMargins, 0, rectangleWidth * 2, panelHeight);
-                        // Repainintg the new temporary sorted bar.
-                        g.FillRectangle(new SolidBrush(Color.LightCoral), ((j - 1) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j - 1], rectangleWidth, panelHeight);
-                        g.FillRectangle(new SolidBrush(Color.LightCoral), (j * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j], rectangleWidth, panelHeight);
+                        // REPAINTING ACTIONS: Updating the bars on the screen to reflect what happened. 
+                        // Drawing the current rectangles as the background color (white). To then repaint them with the correct color. 
+                        g.FillRectangle(this.whiteBrush, ((j - 1) * rectangleWidth) + paddingFromSideMargins, 0, rectangleWidth * 2, panelHeight);
+                        // Repaint the previous higher bar of gray.
+                        g.FillRectangle(this.grayBrush, (prevHigherValIdx * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
+                        // Repainting the new temporary sorted bar.
+                        RepaintCurrentBars(j - 1, j, valuesArray, g, rectangleWidth, paddingFromSideMargins, panelHeight);
+                        // New higher value.
+                        prevHigherValIdx = j;
                     }
-
-                    iteration++;
-                    // 268088
                 }
+                // Color the last element, which has been sorted in green.
+                g.FillRectangle(this.greenBrush, ((i - 1) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[i - 1], rectangleWidth, panelHeight);
 
                 // Check if no swapped have occurred, therefore the Array has been completely sorted.
                 if (swapOccurred == false)
+                {
+                    // Color all the previous bars to green. Since they have been already sorted.
+                    for (int z = 0; z < i; z++)
+                        g.FillRectangle(this.greenBrush, (z * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[z], rectangleWidth, panelHeight);
                     return;
+                }
             }
         }
+        /// <summary>
+        /// Method used to repaint the rectangles in the panel.
+        /// </summary>
+        private void RepaintCurrentBars(int smallerValue, int higherValue, int[] valuesArray, Graphics g, int rectangleWidth, int paddingFromSideMargins, int panelHeight)
+        {       
+            g.FillRectangle(this.grayBrush, (smallerValue * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[smallerValue], rectangleWidth, panelHeight);
+            g.FillRectangle(this.redBrush, (higherValue * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[higherValue], rectangleWidth, panelHeight);
+        }
+        #endregion
+
+
+        #region Event Handlers
+        /// <summary>
+        /// Method used to subscribe to the External method.
+        /// </summary>
+        public void SubscribeToExternalMethods(Form mainForm)
+        {
+            mainForm.StopEvent += MainForm_StopEvent;
+        }
+        /// <summary>
+        /// Actions performed when the stop events arrives.
+        /// </summary>
+        public void MainForm_StopEvent(object sender, EventArgs e)
+        {
+            this.IsToStopSorting = true;
+        }
+        #endregion
     }
 }

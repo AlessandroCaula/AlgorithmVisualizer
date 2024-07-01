@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AlgorithmVisualizer
@@ -15,6 +16,7 @@ namespace AlgorithmVisualizer
         bool isFormSizeChanged;
         int rectangleWidth;
         int paddingFromSideMargins;
+        Task runningSortTask;
         #endregion
 
         #region Properties
@@ -92,10 +94,13 @@ namespace AlgorithmVisualizer
         /// </summary>
         private void ResetAndRedrawnValues()
         {
+            // If the sorting task is running don't interrupt it.
+            if (this.runningSortTask?.Status == TaskStatus.Running)
+                return;
+
             if (isFormSizeChanged)
                 LoadDefault();
-
-            g.Dispose();
+            //g.Dispose();
             // Create the random array of values and draw them.
             int[] arrayOfNumbers = CreateRandomValues();
             DrawRectangle(arrayOfNumbers);
@@ -152,15 +157,36 @@ namespace AlgorithmVisualizer
                 }
             }
         }
+        
+
         /// <summary>
         /// Action to be performed when the sort button is clicked.
         /// </summary>
         private void buttonSort_Click(object sender, EventArgs e)
         {
+            // If the sorting task is running don't interrupt it.
+            if (this.runningSortTask?.Status == TaskStatus.Running)
+                return;
+
             // Create an instance of the Sort Engine. 
             ISortEngine se = new BubbleSortEngine();
-            // Call the DoWork Method.
-            se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height);
+            // Call the method used to subscribe to the 
+            se.SubscribeToExternalMethods(this);
+            // Call the DoWork Method in a separate Task.
+            this.runningSortTask = Task.Run(() =>
+            se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height)
+            );
+
+
+        }       
+        
+
+        /// <summary>
+        /// Action performed when the Stop button is clicked.
+        /// </summary>
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            RaiseStopEvent(sender, e);
         }
         /// <summary>
         /// Action performed when the size of the form has changed.
@@ -169,13 +195,35 @@ namespace AlgorithmVisualizer
         {
             base.OnSizeChanged(e);
 
-            //if (this.arrayOfNumbers != null)
-            //    DrawRectangle1(this.arrayOfNumbers);
-
             this.isFormSizeChanged = true;
             // Every time that the dimension of the form changes, recompute the array of values.
             ResetAndRedrawnValues();
         }
+        /// <summary>
+        /// Raise the event to stop the execution of the sorting algorithm.
+        /// </summary>
+        private void RaiseStopEvent(object sender, EventArgs e)
+        {
+            //if (this.runningSortTask != null)
+            //{   
+            //    this.runningSortTask.Wait();
+            //}
+
+            StopEvent?.Invoke(sender, e);
+        }
+        #endregion
+
+
+        #region Delegates
+        /// <summary>
+        /// Delegate used for stopping the execution of the 
+        /// </summary>
+        public delegate void StopEventHandler(object sender, EventArgs e);
+        #endregion
+
+
+        #region Events
+        public event StopEventHandler StopEvent;
         #endregion
     }
 }
