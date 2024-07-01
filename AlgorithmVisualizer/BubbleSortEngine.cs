@@ -22,6 +22,7 @@ namespace AlgorithmVisualizer
         SolidBrush greenBrush;
         SolidBrush grayBrush;
         SolidBrush whiteBrush;
+        int lastValueSortedIdx;
         #endregion
 
 
@@ -55,10 +56,21 @@ namespace AlgorithmVisualizer
             this.whiteBrush = new SolidBrush(Color.White);
             this.IsToStopSorting = false;
             int prevHigherValIdx = 0;
+            int arrayLength = valuesArray.Length;
 
+            // Determine the Duration of the Sleep. 
+            //int sleepDuration;
+            //if ()
+
+            // Check if the sorting was interrupted.
+            //if (this.lastValueSortedIdx != 0 || this.lastValueSortedIdx != -1)
+            //    arrayLength = lastValueSortedIdx;
+            //this.lastValueSortedIdx = -1;
+
+            // Flag used to interrupt the computation if the array has been completely sorted.
             bool swapOccurred;
             // Loop through the length of the entire array.
-            for (int i = valuesArray.Length; i >= 0; i--)
+            for (int i = arrayLength; i >= 0; i--)
             {
                 // Flag for checking whether no swaps have occurred during this cycle, meaning that all the elements are already sorted.
                 swapOccurred = false;
@@ -71,7 +83,11 @@ namespace AlgorithmVisualizer
 
                     // Check whether the Stop button is clicked, and the sorting must be stopped.
                     if (this.IsToStopSorting)
+                    {
+                        g.FillRectangle(this.grayBrush, (prevHigherValIdx * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
+                        lastValueSortedIdx = i;
                         return;
+                    }
 
                     // Continue to the next index when j equal to 0.
                     if (j == 0)

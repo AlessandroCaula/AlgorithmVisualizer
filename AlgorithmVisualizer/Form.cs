@@ -17,6 +17,7 @@ namespace AlgorithmVisualizer
         int rectangleWidth;
         int paddingFromSideMargins;
         Task runningSortTask;
+        ISortEngine se;
         #endregion
 
         #region Properties
@@ -151,7 +152,7 @@ namespace AlgorithmVisualizer
             else
             {
                 if (intTextBoxValue != trackBarSpeed.Value)
-                {
+                { 
                     trackBarSpeed.Value = intTextBoxValue;
                     trackBarSpeed_Scroll(sender, e);
                 }
@@ -162,7 +163,7 @@ namespace AlgorithmVisualizer
         /// <summary>
         /// Action to be performed when the sort button is clicked.
         /// </summary>
-        private void buttonSort_Click(object sender, EventArgs e)
+        private void buttonSort_Click1(object sender, EventArgs e)
         {
             // If the sorting task is running don't interrupt it.
             if (this.runningSortTask?.Status == TaskStatus.Running)
@@ -176,10 +177,31 @@ namespace AlgorithmVisualizer
             this.runningSortTask = Task.Run(() =>
             se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height)
             );
+        }
 
 
-        }       
-        
+        /// <summary>
+        /// Action to be performed when the sort button is clicked.
+        /// </summary>
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+            // If the sorting task is running don't interrupt it.
+            if (this.runningSortTask?.Status == TaskStatus.Running)
+                return;
+
+            if (se == null)
+            {
+                // Create an instance of the Sort Engine. 
+                this.se = new BubbleSortEngine();
+                // Call the method used to subscribe to the 
+                se.SubscribeToExternalMethods(this);
+            }
+            // Call the DoWork Method in a separate Task.
+            this.runningSortTask = Task.Run(() =>
+            se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height)
+            );
+        }
+
 
         /// <summary>
         /// Action performed when the Stop button is clicked.
@@ -188,6 +210,7 @@ namespace AlgorithmVisualizer
         {
             RaiseStopEvent(sender, e);
         }
+
         /// <summary>
         /// Action performed when the size of the form has changed.
         /// </summary>
