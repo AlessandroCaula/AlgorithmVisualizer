@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +21,9 @@ namespace AlgorithmVisualizer
         int paddingFromSideMargins;
         Task runningSortTask;
         ISortEngine se;
+
+        BackgroundWorker bgw = null;
+        bool isPaused;
         #endregion
 
         #region Properties
@@ -29,6 +35,7 @@ namespace AlgorithmVisualizer
             InitializeComponent();
 
             LoadDefault();
+            PopulateDropDownSortingAlgorithm();
         }
         #endregion
 
@@ -50,7 +57,29 @@ namespace AlgorithmVisualizer
             textBoxSpeed.Text = maxNumberOfEntries.ToString();
             this.isFormSizeChanged = false;
 
-            g = panelGraphic.CreateGraphics();
+            //g = panelGraphic.CreateGraphics();
+
+            //ResetAndRedrawnValues();
+        }
+        /// <summary>
+        /// Populate the drop down that will list all the sorting algorithm.
+        /// </summary>
+        private void PopulateDropDownSortingAlgorithm()
+        {
+            // To retrieve all the sorting algorithms, we are gonna ask to the form to look through its own internal structure to find all the classes that implements the ISortEngine interface.
+            List<string> classList = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())
+                .Where(x => typeof(ISortEngine).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                .Select(x => x.Name).ToList();
+            // Sort the list alphabetically.
+            classList.Sort();
+            // Populate the drop down menu with the names of the algorithms.
+            foreach(string entry in classList)
+            {
+                comboBoxAlgorithmSelector.Items.Add(entry);
+            }
+            // Set the default combo box value to the first algorithm.
+            comboBoxAlgorithmSelector.SelectedItem = 0;
+            comboBoxAlgorithmSelector.Text = classList[0];
         }
         /// <summary>
         /// Create Randm Values.
@@ -117,6 +146,34 @@ namespace AlgorithmVisualizer
             this.Close();
         }
         /// <summary>
+        /// Action to be performed when the sort button is clicked.
+        /// </summary>
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+            // If the sorting task is running don't interrupt it.
+            if (this.runningSortTask?.Status == TaskStatus.Running)
+                return;
+
+            if (se == null)
+            {
+                // Create an instance of the Sort Engine. 
+                this.se = new BubbleSortEngine(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height);
+                // Call the method used to subscribe to the 
+                se.SubscribeToExternalMethods(this);
+            }
+            // Call the DoWork Method in a separate Task.
+            this.runningSortTask = Task.Run(() =>
+            se.NextStep()
+            );
+        }
+        /// <summary>
+        /// Action performed when the Stop button is clicked.
+        /// </summary>
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            RaiseStopEvent(sender, e);
+        }
+        /// <summary>
         /// Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         /// </summary>
         private void buttonReset_Click(object sender, EventArgs e)
@@ -158,59 +215,6 @@ namespace AlgorithmVisualizer
                 }
             }
         }
-        
-
-        /// <summary>
-        /// Action to be performed when the sort button is clicked.
-        /// </summary>
-        private void buttonSort_Click1(object sender, EventArgs e)
-        {
-            // If the sorting task is running don't interrupt it.
-            if (this.runningSortTask?.Status == TaskStatus.Running)
-                return;
-
-            // Create an instance of the Sort Engine. 
-            ISortEngine se = new BubbleSortEngine();
-            // Call the method used to subscribe to the 
-            se.SubscribeToExternalMethods(this);
-            // Call the DoWork Method in a separate Task.
-            this.runningSortTask = Task.Run(() =>
-            se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height)
-            );
-        }
-
-
-        /// <summary>
-        /// Action to be performed when the sort button is clicked.
-        /// </summary>
-        private void buttonSort_Click(object sender, EventArgs e)
-        {
-            // If the sorting task is running don't interrupt it.
-            if (this.runningSortTask?.Status == TaskStatus.Running)
-                return;
-
-            if (se == null)
-            {
-                // Create an instance of the Sort Engine. 
-                this.se = new BubbleSortEngine();
-                // Call the method used to subscribe to the 
-                se.SubscribeToExternalMethods(this);
-            }
-            // Call the DoWork Method in a separate Task.
-            this.runningSortTask = Task.Run(() =>
-            se.DoWork(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height)
-            );
-        }
-
-
-        /// <summary>
-        /// Action performed when the Stop button is clicked.
-        /// </summary>
-        private void buttonStop_Click(object sender, EventArgs e)
-        {
-            RaiseStopEvent(sender, e);
-        }
-
         /// <summary>
         /// Action performed when the size of the form has changed.
         /// </summary>
@@ -232,14 +236,11 @@ namespace AlgorithmVisualizer
         #endregion
 
 
-        #region Delegates
+        #region Events
         /// <summary>
         /// Delegate used for stopping the execution of the 
         /// </summary>
         public delegate void StopEventHandler(object sender, EventArgs e);
-        #endregion
-
-        #region Events
         public event StopEventHandler StopEvent;
         #endregion
     }

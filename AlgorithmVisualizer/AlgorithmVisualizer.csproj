@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BubbleSortEngine.cs" />
-    <Compile Include="DiscardedCode.cs" />
+    <Compile Include="DeletedCode.cs" />
     <Compile Include="Form.cs">
       <SubType>Form</SubType>
     </Compile>

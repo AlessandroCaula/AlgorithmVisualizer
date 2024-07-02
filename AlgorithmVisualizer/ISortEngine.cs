@@ -27,9 +27,22 @@ namespace AlgorithmVisualizer
         /// <param name="valuesArray"> Array with values to sort </param>
         /// <param name="g"> Graphic for the painting </param>
         /// <param name="maxValue"> Maximum value that can be found inside the array </param>
-        /// <param name="rectangleWidth"> Pixels widht of the rectangles. Repainting pourpose </param>
-        /// <param name="paddingFromSideMargins"> Padding from left and right margin of the panel. Repainting pourpose </param>
-        /// <param name="panelHeight"> Height of the panel. Repainting pourpose </param>
-        void DoWork(int[] valuesArray, Graphics g, int maxValue, int rectangleWidth, int paddingFromSideMargins, int panelHeight);
+        /// <param name="rectangleWidth"> Pixels width of the rectangles. Repainting purpose </param>
+        /// <param name="paddingFromSideMargins"> Padding from left and right margin of the panel. Repainting purpose </param>
+        /// <param name="panelHeight"> Height of the panel. Repainting purpose </param>
+        //void DoWork(int[] valuesArray, Graphics g, int maxValue, int rectangleWidth, int paddingFromSideMargins, int panelHeight);
+
+        /// <summary>
+        /// Every time it is called it will take one step toward sorting the output.
+        /// </summary>
+        void NextStep();
+        /// <summary>
+        /// Test method used to know if the array has been completely sorted.
+        /// </summary>
+        void IsSorted();
+        /// <summary>
+        /// Method that allows you to pause and resume and refresh the graphics object.
+        /// </summary>
+        void Redraw();
     }
 }

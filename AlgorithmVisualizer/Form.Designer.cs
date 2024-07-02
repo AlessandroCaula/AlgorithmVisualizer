@@ -64,7 +64,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 50);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem
@@ -77,7 +77,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(65, 50);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // label1
@@ -91,8 +91,9 @@
             // 
             // comboBoxAlgorithmSelector
             // 
+            this.comboBoxAlgorithmSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAlgorithmSelector.FormattingEnabled = true;
-            this.comboBoxAlgorithmSelector.Location = new System.Drawing.Point(99, 49);
+            this.comboBoxAlgorithmSelector.Location = new System.Drawing.Point(104, 47);
             this.comboBoxAlgorithmSelector.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.comboBoxAlgorithmSelector.Name = "comboBoxAlgorithmSelector";
             this.comboBoxAlgorithmSelector.Size = new System.Drawing.Size(192, 28);
