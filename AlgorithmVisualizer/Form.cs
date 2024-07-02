@@ -20,14 +20,14 @@ namespace AlgorithmVisualizer
         int rectangleWidth;
         int paddingFromSideMargins;
         Task runningSortTask;
-        //ISortEngine se;
-
         BackgroundWorker bgw = null;
         bool isPaused;
         #endregion
 
+
         #region Properties
         #endregion
+
 
         #region Constructor
         public Form()
@@ -37,6 +37,7 @@ namespace AlgorithmVisualizer
             PopulateDropDownSortingAlgorithm();
         }
         #endregion
+
 
         #region Methods
         /// <summary>
@@ -123,14 +124,17 @@ namespace AlgorithmVisualizer
             if (this.runningSortTask?.Status == TaskStatus.Running)
                 return;
 
+            this.isPaused = false;
+
             if (isFormSizeChanged)
                 LoadDefault();
-            //g.Dispose();
+
             // Create the random array of values and draw them.
             int[] arrayOfNumbers = CreateRandomValues();
             DrawRectangle(arrayOfNumbers);
         }
         #endregion
+
 
         #region Event Handlers
         /// <summary>
@@ -150,13 +154,13 @@ namespace AlgorithmVisualizer
             // If the sorting task is running don't interrupt it.
             if (this.runningSortTask?.Status == TaskStatus.Running)
                 return;
-
             // Initialize the background worker.
             bgw = new BackgroundWorker();
             bgw.WorkerSupportsCancellation = true;
             bgw.DoWork += new DoWorkEventHandler(bgw_DoWork);
             // Running the background worker and pass to it the Sorting Algorithm as the argument. 
             bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
+            this.isPaused = false;
         }
         /// <summary>
         /// Action to be performed when the sort button is clicked.
@@ -171,13 +175,15 @@ namespace AlgorithmVisualizer
             bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
         }
 
-
         /// <summary>
         /// Action performed when the Stop button is clicked.
         /// </summary>
         private void buttonStop_Click(object sender, EventArgs e)
         {
             RaiseStopEvent(sender, e);
+            this.isPaused = true;
+            bgw.Dispose();
+            bgw.CancelAsync();
         }
         /// <summary>
         /// Action performed when the Stop button is clicked.
@@ -191,11 +197,19 @@ namespace AlgorithmVisualizer
             }
         }
 
+
         /// <summary>
         /// Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         /// </summary>
         private void buttonReset_Click(object sender, EventArgs e)
         {
+            if (bgw != null)
+            {
+                RaiseStopEvent(sender, e);
+                bgw.CancelAsync();
+                bgw.Dispose();
+            }
+
             ResetAndRedrawnValues();
         }
         /// <summary>
@@ -272,9 +286,7 @@ namespace AlgorithmVisualizer
                 se.SubscribeToExternalMethods(this);
                 se.DoWork();
             }
-            catch (Exception ex) 
-            { 
-            }
+            catch (Exception ex) { }
         }
         public void bgw_DoWork1(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
@@ -300,6 +312,7 @@ namespace AlgorithmVisualizer
             }
         }
         #endregion
+
 
         #region Events
         /// <summary>

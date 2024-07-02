@@ -96,6 +96,7 @@ namespace AlgorithmVisualizer
                     if (this.IsToStopSorting)
                     {
                         g.FillRectangle(this.grayBrush, (prevHigherValIdx * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
+                        this.lastValueSortedIdx = i;
                         return;
                     }
 
