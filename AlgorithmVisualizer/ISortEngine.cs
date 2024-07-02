@@ -13,6 +13,7 @@ namespace AlgorithmVisualizer
         /// Property that will set if the stop event has been raised from the main form, and the sorting algorithm has to stop.
         /// </summary>
         bool IsToStopSorting { get; set; }
+        bool IsArraySorted { get; set; }
         /// <summary>
         /// Method that will be used for subscribe to external events. Like the Stop event.
         /// </summary>
@@ -24,14 +25,7 @@ namespace AlgorithmVisualizer
         /// <summary>
         /// DoWork interface method, that will be called for the execution of the sorting algorithm. 
         /// </summary>
-        /// <param name="valuesArray"> Array with values to sort </param>
-        /// <param name="g"> Graphic for the painting </param>
-        /// <param name="maxValue"> Maximum value that can be found inside the array </param>
-        /// <param name="rectangleWidth"> Pixels width of the rectangles. Repainting purpose </param>
-        /// <param name="paddingFromSideMargins"> Padding from left and right margin of the panel. Repainting purpose </param>
-        /// <param name="panelHeight"> Height of the panel. Repainting purpose </param>
-        //void DoWork(int[] valuesArray, Graphics g, int maxValue, int rectangleWidth, int paddingFromSideMargins, int panelHeight);
-
+        void DoWork();
         /// <summary>
         /// Every time it is called it will take one step toward sorting the output.
         /// </summary>

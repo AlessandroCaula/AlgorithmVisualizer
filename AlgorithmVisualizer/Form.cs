@@ -20,7 +20,7 @@ namespace AlgorithmVisualizer
         int rectangleWidth;
         int paddingFromSideMargins;
         Task runningSortTask;
-        ISortEngine se;
+        //ISortEngine se;
 
         BackgroundWorker bgw = null;
         bool isPaused;
@@ -33,7 +33,6 @@ namespace AlgorithmVisualizer
         public Form()
         {
             InitializeComponent();
-
             LoadDefault();
             PopulateDropDownSortingAlgorithm();
         }
@@ -56,10 +55,6 @@ namespace AlgorithmVisualizer
             trackBarSpeed.Value = maxNumberOfEntries;
             textBoxSpeed.Text = maxNumberOfEntries.ToString();
             this.isFormSizeChanged = false;
-
-            //g = panelGraphic.CreateGraphics();
-
-            //ResetAndRedrawnValues();
         }
         /// <summary>
         /// Populate the drop down that will list all the sorting algorithm.
@@ -145,6 +140,8 @@ namespace AlgorithmVisualizer
         {
             this.Close();
         }
+
+
         /// <summary>
         /// Action to be performed when the sort button is clicked.
         /// </summary>
@@ -154,18 +151,27 @@ namespace AlgorithmVisualizer
             if (this.runningSortTask?.Status == TaskStatus.Running)
                 return;
 
-            if (se == null)
-            {
-                // Create an instance of the Sort Engine. 
-                this.se = new BubbleSortEngine(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height);
-                // Call the method used to subscribe to the 
-                se.SubscribeToExternalMethods(this);
-            }
-            // Call the DoWork Method in a separate Task.
-            this.runningSortTask = Task.Run(() =>
-            se.NextStep()
-            );
+            // Initialize the background worker.
+            bgw = new BackgroundWorker();
+            bgw.WorkerSupportsCancellation = true;
+            bgw.DoWork += new DoWorkEventHandler(bgw_DoWork);
+            // Running the background worker and pass to it the Sorting Algorithm as the argument. 
+            bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
         }
+        /// <summary>
+        /// Action to be performed when the sort button is clicked.
+        /// </summary>
+        private void buttonSort_Click1(object sender, EventArgs e)
+        {
+            // Initialize the background worker.
+            bgw = new BackgroundWorker();
+            bgw.WorkerSupportsCancellation = true;
+            bgw.DoWork += new DoWorkEventHandler(bgw_DoWork1);
+            // Running the background worker and pass to it the Sorting algorithm as the argument.
+            bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
+        }
+
+
         /// <summary>
         /// Action performed when the Stop button is clicked.
         /// </summary>
@@ -173,6 +179,18 @@ namespace AlgorithmVisualizer
         {
             RaiseStopEvent(sender, e);
         }
+        /// <summary>
+        /// Action performed when the Stop button is clicked.
+        /// </summary>
+        private void buttonStop_Click1(object sender, EventArgs e)
+        {
+            if (!isPaused)
+            {
+                bgw.CancelAsync();
+                isPaused = true;
+            }
+        }
+
         /// <summary>
         /// Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         /// </summary>
@@ -235,6 +253,53 @@ namespace AlgorithmVisualizer
         }
         #endregion
 
+
+        #region BackGround
+        public void bgw_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            // Cast the sender.
+            BackgroundWorker bw = sender as BackgroundWorker;
+            string sortEngineName = (string)e.Argument;
+            // Now that we know the sorting algorithm, we will figure out the actual type using Reflection. 
+            // Figuring out the concrete class that's going to implement the algorithm. (prepend the namespace: AlgorithmVisualizer
+            Type type = Type.GetType("AlgorithmVisualizer." + sortEngineName);
+            // Get the constructor of this class Type.
+            var ctors = type.GetConstructors();
+            try
+            {
+                // Create a sort engine of the type identified with reflection. And invoke it's constructor.
+                ISortEngine se = (ISortEngine)ctors[0].Invoke(new object[] { this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height });
+                se.SubscribeToExternalMethods(this);
+                se.DoWork();
+            }
+            catch (Exception ex) 
+            { 
+            }
+        }
+        public void bgw_DoWork1(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            // Cast the sender.
+            BackgroundWorker bw = sender as BackgroundWorker;
+            string sortEngineName = (string)e.Argument;
+            // Now that we know the sorting algorithm, we will figure out the actual type using Reflection. 
+            // Figuring out the concrete class that's going to implement the algorithm. (prepend the namespace: AlgorithmVisualizer
+            Type type = Type.GetType("AlgorithmVisualizer." + sortEngineName);
+            // Get the constructor of this class Type.
+            var ctors = type.GetConstructors();
+            try
+            {
+                // Create a sort engine of the type identified with reflection. And invoke it's constructor.
+                ISortEngine se = (ISortEngine)ctors[0].Invoke(new object[] { this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height });
+                while (!bgw.CancellationPending && !se.IsArraySorted) // !se.IsSorted
+                {
+                    se.NextStep();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        #endregion
 
         #region Events
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -474,8 +475,43 @@ namespace AlgorithmVisualizer
     //    /// </summary>
     //    public delegate void StopEventHandler(object sender, EventArgs e);
     //    public event StopEventHandler StopEvent;
-        #endregion
-    }
+    //#endregion
+    //}
+
+
+
+    //private void buttonSort_Click(object sender, EventArgs e)
+    //{
+    //    // If the sorting task is running don't interrupt it.
+    //    if (this.runningSortTask?.Status == TaskStatus.Running)
+    //        return;
+
+    //    ////if (se == null)
+    //    ////{
+    //    ////    // Create an instance of the Sort Engine. 
+    //    ////    this.se = new BubbleSortEngine(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height);
+    //    ////    // Call the method used to subscribe to the 
+    //    ////    se.SubscribeToExternalMethods(this);
+    //    ////}
+
+    //    //// Create an instance of the Sort Engine. 
+    //    //this.se = new BubbleSortEngine(this.arrayOfNumbers, this.g, this.maxValue, this.rectangleWidth, this.paddingFromSideMargins, this.panelGraphic.Height);
+    //    //// Call the method used to subscribe to the 
+    //    //se.SubscribeToExternalMethods(this);
+
+    //    //// Call the DoWork Method in a separate Task.
+    //    //this.runningSortTask = Task.Run(() =>
+    //    //se.DoWork()
+    //    //);
+
+
+    //    // Initialize the background worker.
+    //    bgw = new BackgroundWorker();
+    //    bgw.WorkerSupportsCancellation = true;
+    //    bgw.DoWork += new DoWorkEventHandler(bgw_DoWork);
+    //    // Running the background worker and pass to it the Sorting Algorithm as the argument. 
+    //    bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
+    //}
 }
 
 
