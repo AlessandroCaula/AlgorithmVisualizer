@@ -35,7 +35,7 @@ namespace AlgorithmVisualizer
         public BubbleSortEngine() { }
         #endregion
 
-
+          
         #region Methods
         /// <summary>
         /// 1) Traverse from left and compare adjacent elements and the higher one is placed at right side. 
@@ -56,21 +56,20 @@ namespace AlgorithmVisualizer
             this.whiteBrush = new SolidBrush(Color.White);
             this.IsToStopSorting = false;
             int prevHigherValIdx = 0;
-            int arrayLength = valuesArray.Length;
 
-            // Determine the Duration of the Sleep. 
-            //int sleepDuration;
-            //if ()
-
-            // Check if the sorting was interrupted.
-            //if (this.lastValueSortedIdx != 0 || this.lastValueSortedIdx != -1)
-            //    arrayLength = lastValueSortedIdx;
-            //this.lastValueSortedIdx = -1;
+            //Determine the Duration of the Sleep. 
+            int sleepDuration = 0;
+            if (valuesArray.Length <= 200)
+                sleepDuration = 1;
+            if (valuesArray.Length <= 100)
+                sleepDuration = 5;
+            if (valuesArray.Length <= 20)
+                sleepDuration = 100;
 
             // Flag used to interrupt the computation if the array has been completely sorted.
             bool swapOccurred;
             // Loop through the length of the entire array.
-            for (int i = arrayLength; i >= 0; i--)
+            for (int i = valuesArray.Length; i >= 0; i--)
             {
                 // Flag for checking whether no swaps have occurred during this cycle, meaning that all the elements are already sorted.
                 swapOccurred = false;
@@ -79,13 +78,12 @@ namespace AlgorithmVisualizer
                 // Loop through all the elements before the current one (element at i). 
                 for (int j = 0; j < i; j++)
                 {
-                    Thread.Sleep(5);
+                    Thread.Sleep(sleepDuration);
 
                     // Check whether the Stop button is clicked, and the sorting must be stopped.
                     if (this.IsToStopSorting)
                     {
                         g.FillRectangle(this.grayBrush, (prevHigherValIdx * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
-                        lastValueSortedIdx = i;
                         return;
                     }
 
@@ -113,9 +111,13 @@ namespace AlgorithmVisualizer
                         // New higher value.
                         prevHigherValIdx = j;
                     }
+                    else if (j == i - 1)
+                    {
+                        g.FillRectangle(this.greenBrush, (j * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j], rectangleWidth, panelHeight);
+                    }
                 }
                 // Color the last element, which has been sorted in green.
-                g.FillRectangle(this.greenBrush, ((i - 1) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[i - 1], rectangleWidth, panelHeight);
+                g.FillRectangle(this.greenBrush, ((prevHigherValIdx) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
 
                 // Check if no swapped have occurred, therefore the Array has been completely sorted.
                 if (swapOccurred == false)

@@ -77,7 +77,7 @@ namespace AlgorithmVisualizer
             panelGraphic.Update();
 
             // Compute the width dimension of each rectangle.
-            this.rectangleWidth = (int)(Math.Round(panelGraphic.Width / (double)numEntries)) != 0 ? (int)(Math.Round(panelGraphic.Width / (double)numEntries)) : 1;
+            this.rectangleWidth = (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) != 0 ? (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) : 1;
             // Compute the residual, not used pixels in the panel.
             int residualPixels = panelGraphic.Width - (numEntries * rectangleWidth);
             // Divide the residual pixels so that half of them will be the padding from the side borders of the panel.
@@ -227,11 +227,6 @@ namespace AlgorithmVisualizer
         /// </summary>
         private void RaiseStopEvent(object sender, EventArgs e)
         {
-            //if (this.runningSortTask != null)
-            //{   
-            //    this.runningSortTask.Wait();
-            //}
-
             StopEvent?.Invoke(sender, e);
         }
         #endregion
@@ -243,7 +238,6 @@ namespace AlgorithmVisualizer
         /// </summary>
         public delegate void StopEventHandler(object sender, EventArgs e);
         #endregion
-
 
         #region Events
         public event StopEventHandler StopEvent;
