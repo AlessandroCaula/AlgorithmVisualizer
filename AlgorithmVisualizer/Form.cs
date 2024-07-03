@@ -146,6 +146,7 @@ namespace AlgorithmVisualizer
         }
 
 
+
         /// <summary>
         /// Action to be performed when the sort button is clicked.
         /// </summary>
@@ -175,6 +176,7 @@ namespace AlgorithmVisualizer
             bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
         }
 
+
         /// <summary>
         /// Action performed when the Stop button is clicked.
         /// </summary>
@@ -196,6 +198,7 @@ namespace AlgorithmVisualizer
                 isPaused = true;
             }
         }
+
 
 
         /// <summary>
@@ -269,6 +272,11 @@ namespace AlgorithmVisualizer
 
 
         #region BackGround
+        /// <summary>
+        /// Background worker for the Bubble sort algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void bgw_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             // Cast the sender.
@@ -288,6 +296,11 @@ namespace AlgorithmVisualizer
             }
             catch (Exception ex) { }
         }
+        /// <summary>
+        /// Background worker for the Bubble sort algorithm.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void bgw_DoWork1(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             // Cast the sender.

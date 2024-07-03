@@ -13,6 +13,9 @@ namespace AlgorithmVisualizer
         /// Property that will set if the stop event has been raised from the main form, and the sorting algorithm has to stop.
         /// </summary>
         bool IsToStopSorting { get; set; }
+        /// <summary>
+        /// Property that will expose if the Array is sorted.
+        /// </summary>
         bool IsArraySorted { get; set; }
         /// <summary>
         /// Method that will be used for subscribe to external events. Like the Stop event.
