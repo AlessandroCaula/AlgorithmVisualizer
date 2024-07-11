@@ -512,6 +512,41 @@ namespace AlgorithmVisualizer
     //    // Running the background worker and pass to it the Sorting Algorithm as the argument. 
     //    bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
     //}
+
+
+
+
+
+
+    // INSERTION SORT (MAYBE ????)
+    //// Loop through the previous (temporary sorted) values.
+    //for (int j = 0; j < i; j++)
+    //{
+    //    // Check whether the Stop button is clicked, and the sorting must be stopped.
+    //    if (this.IsToStopSorting)
+    //        return;
+
+    //    // If the current number is lower than the previous, exchange the two.
+    //    if (valuesArray[i] < valuesArray[j])
+    //    {
+    //        RepaintCurrentBars(i, j);
+
+    //        Thread.Sleep(sleepDuration);
+
+    //        // Exchange the two values.
+    //        int tempValue = valuesArray[j];
+    //        valuesArray[j] = valuesArray[i];
+    //        valuesArray[i] = tempValue;
+
+    //        RepaintCurrentBars(i, j);
+
+    //        Thread.Sleep(sleepDuration);
+
+    //        // Repaint these two selected values in Gray.
+    //        g.FillRectangle(this.grayBrush, (i * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[i], this.rectangleWidth, this.panelHeight);
+    //        g.FillRectangle(this.grayBrush, (j * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[j], this.rectangleWidth, this.panelHeight);
+    //    }
+    //}
 }
 
 

@@ -33,8 +33,10 @@ namespace AlgorithmVisualizer
         public Form()
         {
             InitializeComponent();
-            LoadDefault();
+            LoadDefault();            
             PopulateDropDownSortingAlgorithm();
+            // Subscribe to the Shown event of the form to ensure that the form is fully loaded and displayed. 
+            this.Shown += Form_Shown;
         }
         #endregion
 
@@ -56,6 +58,9 @@ namespace AlgorithmVisualizer
             trackBarSpeed.Value = maxNumberOfEntries;
             textBoxSpeed.Text = maxNumberOfEntries.ToString();
             this.isFormSizeChanged = false;
+            // Initialize the Graphic.
+            if (g == null)
+                g = panelGraphic.CreateGraphics();
         }
         /// <summary>
         /// Populate the drop down that will list all the sorting algorithm.
@@ -96,10 +101,10 @@ namespace AlgorithmVisualizer
         /// </summary>
         private void DrawRectangle(int[] arrayOfNumbers)
         {
-            g = panelGraphic.CreateGraphics();
+            if (g == null)
+                g = panelGraphic.CreateGraphics();
 
-            panelGraphic.Invalidate();
-            panelGraphic.Update();
+            g.Clear(panelGraphic.BackColor);
 
             // Compute the width dimension of each rectangle.
             this.rectangleWidth = (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) != 0 ? (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) : 1;
@@ -120,8 +125,12 @@ namespace AlgorithmVisualizer
         /// </summary>
         private void ResetAndRedrawnValues()
         {
-            // If the sorting task is running don't interrupt it.
-            if (this.runningSortTask?.Status == TaskStatus.Running)
+            //// If the sorting task is running don't interrupt it.
+            //if (this.runningSortTask?.Status == TaskStatus.Running)
+            //    return;
+
+            // Check if the sorting background worker is running and busy.
+            if (bgw != null && bgw.IsBusy)
                 return;
 
             this.isPaused = false;
@@ -144,16 +153,25 @@ namespace AlgorithmVisualizer
         {
             this.Close();
         }
-
-
-
+        /// <summary>
+        /// Action performed when the Form is fully loaded and displayed on screen.
+        /// </summary>
+        private void Form_Shown(object sender, EventArgs e)
+        {
+            // Initialize and draw the random bars at first initialization.
+            ResetAndRedrawnValues();
+        }
         /// <summary>
         /// Action to be performed when the sort button is clicked.
         /// </summary>
         private void buttonSort_Click(object sender, EventArgs e)
         {
-            // If the sorting task is running don't interrupt it.
-            if (this.runningSortTask?.Status == TaskStatus.Running)
+            //// If the sorting task is running don't interrupt it.
+            //if (this.runningSortTask?.Status == TaskStatus.Running)
+            //    return;
+
+            // If the background task is running and busy.
+            if (bgw != null && bgw.IsBusy) 
                 return;
             // Initialize the background worker.
             bgw = new BackgroundWorker();
@@ -164,7 +182,18 @@ namespace AlgorithmVisualizer
             this.isPaused = false;
         }
         /// <summary>
-        /// Action to be performed when the sort button is clicked.
+        /// Action performed when the Stop button is clicked.
+        /// </summary>
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            RaiseStopEvent(sender, e);
+            this.isPaused = true;
+            bgw.Dispose();
+            bgw.CancelAsync();
+        }
+
+        /// <summary>
+        /// TUTORIAL: Action to be performed when the sort button is clicked.
         /// </summary>
         private void buttonSort_Click1(object sender, EventArgs e)
         {
@@ -175,20 +204,8 @@ namespace AlgorithmVisualizer
             // Running the background worker and pass to it the Sorting algorithm as the argument.
             bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
         }
-
-
         /// <summary>
-        /// Action performed when the Stop button is clicked.
-        /// </summary>
-        private void buttonStop_Click(object sender, EventArgs e)
-        {
-            RaiseStopEvent(sender, e);
-            this.isPaused = true;
-            bgw.Dispose();
-            bgw.CancelAsync();
-        }
-        /// <summary>
-        /// Action performed when the Stop button is clicked.
+        /// TUTORIAL: Action performed when the Stop button is clicked.
         /// </summary>
         private void buttonStop_Click1(object sender, EventArgs e)
         {
@@ -199,20 +216,21 @@ namespace AlgorithmVisualizer
             }
         }
 
-
-
         /// <summary>
         /// Action to be performed at the Reset button click. Re-initialization of the array of numbers.
         /// </summary>
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            if (bgw != null)
+            // Check if the background worker exists and it is running. 
+            if (bgw != null && bgw.IsBusy)
+                return;
+
+            if (bgw != null && !bgw.IsBusy)
             {
                 RaiseStopEvent(sender, e);
                 bgw.CancelAsync();
                 bgw.Dispose();
             }
-
             ResetAndRedrawnValues();
         }
         /// <summary>
@@ -294,10 +312,13 @@ namespace AlgorithmVisualizer
                 se.SubscribeToExternalMethods(this);
                 se.DoWork();
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            { 
+            }
         }
+
         /// <summary>
-        /// Background worker for the Bubble sort algorithm.
+        /// TUTORIAL: Background worker for the Bubble sort algorithm.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

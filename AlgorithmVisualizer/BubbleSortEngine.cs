@@ -73,7 +73,7 @@ namespace AlgorithmVisualizer
         /// 2) In this way, the largest element is moved to the rightmost end at first. 
         /// 3) This process is then continued to find the second largest and place it and so on until the data is sorted.
         /// Total no. of passes: n-1. Total no. of comparisons: n*(n-1)/2
-        /// It can be optimized by stopping the algorithm if the inner loop didn’t cause any swap. 
+        /// It can be optimized by stopping the algorithm if the inner loop didn't cause any swap. 
         /// Time Complexity: O(N2). Auxiliary Space: O(1).
         /// </summary>
         public void DoWork()
@@ -150,6 +150,7 @@ namespace AlgorithmVisualizer
         }
 
         /// <summary>
+        /// TUTORIAL
         /// 1) Traverse from left and compare adjacent elements and the higher one is placed at right side. 
         /// 2) In this way, the largest element is moved to the rightmost end at first. 
         /// 3) This process is then continued to find the second largest and place it and so on until the data is sorted.
