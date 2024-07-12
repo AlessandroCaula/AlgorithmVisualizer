@@ -9,6 +9,7 @@ namespace AlgorithmVisualizer
 {
     interface ISortEngine
     {
+        #region Properties
         /// <summary>
         /// Property that will set if the stop event has been raised from the main form, and the sorting algorithm has to stop.
         /// </summary>
@@ -17,6 +18,9 @@ namespace AlgorithmVisualizer
         /// Property that will expose if the Array is sorted.
         /// </summary>
         bool IsArraySorted { get; set; }
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Method that will be used for subscribe to external events. Like the Stop event.
         /// </summary>
@@ -41,5 +45,6 @@ namespace AlgorithmVisualizer
         /// Method that allows you to pause and resume and refresh the graphics object.
         /// </summary>
         void Redraw();
+        #endregion
     }
 }

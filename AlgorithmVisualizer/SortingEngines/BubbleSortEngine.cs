@@ -151,6 +151,14 @@ namespace AlgorithmVisualizer
             g.FillRectangle(this.grayBrush, (smallerValue * this.rectangleWidth) + this.paddingFromSideMargins, this.panelHeight - this.valuesArray[smallerValue], this.rectangleWidth, this.panelHeight);
             g.FillRectangle(this.redBrush, (higherValue * this.rectangleWidth) + this.paddingFromSideMargins, this.panelHeight - this.valuesArray[higherValue], this.rectangleWidth, this.panelHeight);
         }
+        /// <summary>
+        /// Method used to subscribe to the External method.
+        /// </summary>
+        public void SubscribeToExternalMethods(Form mainForm)
+        {
+            mainForm.StopEvent -= MainForm_StopEvent;
+            mainForm.StopEvent += MainForm_StopEvent;
+        }
 
         /// <summary>
         /// TUTORIAL
@@ -216,14 +224,6 @@ namespace AlgorithmVisualizer
 
 
         #region Event Handlers
-        /// <summary>
-        /// Method used to subscribe to the External method.
-        /// </summary>
-        public void SubscribeToExternalMethods(Form mainForm)
-        {
-            mainForm.StopEvent -= MainForm_StopEvent;
-            mainForm.StopEvent += MainForm_StopEvent;
-        }
         /// <summary>
         /// Actions performed when the stop events arrives.
         /// </summary>

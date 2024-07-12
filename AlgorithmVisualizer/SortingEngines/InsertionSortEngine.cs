@@ -117,7 +117,9 @@ namespace AlgorithmVisualizer
                 }
             }
         }
-
+        /// <summary>
+        /// Method used to Repaint the object bars.
+        /// </summary>
         private void RepaintCurrentBars(int currentValueIdx, int previousValueIdx)
         {
             // REPAINTING ACTIONS: Updating the bars on the screen to reflect what happened. 
@@ -127,6 +129,14 @@ namespace AlgorithmVisualizer
             // Repaint these two selected values in Red.
             g.FillRectangle(this.redBrush, (currentValueIdx * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[currentValueIdx], this.rectangleWidth, this.panelHeight);
             g.FillRectangle(this.redBrush, (previousValueIdx * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[previousValueIdx], this.rectangleWidth, this.panelHeight);
+        }
+        /// <summary>
+        /// Subscribe to the Events fired from the main form.
+        /// </summary>
+        public void SubscribeToExternalMethods(Form mainForm)
+        {
+            mainForm.StopEvent -= MainForm_StopEvent;
+            mainForm.StopEvent += MainForm_StopEvent;
         }
 
         public void IsSorted()
@@ -145,11 +155,6 @@ namespace AlgorithmVisualizer
 
 
         #region Event Handlers
-        public void SubscribeToExternalMethods(Form mainForm)
-        {
-            mainForm.StopEvent -= MainForm_StopEvent;
-            mainForm.StopEvent += MainForm_StopEvent;
-        }
         public void MainForm_StopEvent(object sender, EventArgs e)
         {
             this.IsToStopSorting = true;
