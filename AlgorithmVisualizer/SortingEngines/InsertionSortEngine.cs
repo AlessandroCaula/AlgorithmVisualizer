@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AlgorithmVisualizer
+namespace AlgorithmVisualizer.SortingEngines
 {
     internal class InsertionSortEngine : ISortEngine
     {
@@ -116,6 +116,8 @@ namespace AlgorithmVisualizer
                     j--;
                 }
             }
+
+            return;
         }
         /// <summary>
         /// Method used to Repaint the object bars.

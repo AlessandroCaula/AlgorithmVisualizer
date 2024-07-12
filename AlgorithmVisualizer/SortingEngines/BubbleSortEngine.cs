@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Threading;
 
-namespace AlgorithmVisualizer
+namespace AlgorithmVisualizer.SortingEngines
 {
     /// <summary>
     /// Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. 
@@ -136,6 +136,8 @@ namespace AlgorithmVisualizer
                     return;
                 }
             }
+
+            return;
         }
         /// <summary>
         /// Method used to repaint the rectangles in the panel.

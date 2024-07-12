@@ -305,7 +305,7 @@ namespace AlgorithmVisualizer
             string sortEngineName = (string)e.Argument;
             // Now that we know the sorting algorithm, we will figure out the actual type using Reflection. 
             // Figuring out the concrete class that's going to implement the algorithm. (prepend the namespace: AlgorithmVisualizer
-            Type type = Type.GetType("AlgorithmVisualizer." + sortEngineName);
+            Type type = Type.GetType("AlgorithmVisualizer.SortingEngines." + sortEngineName);
             // Get the constructor of this class Type.
             var ctors = type.GetConstructors();
             try
