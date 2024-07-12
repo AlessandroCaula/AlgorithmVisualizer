@@ -53,16 +53,18 @@ namespace AlgorithmVisualizer
             this.grayBrush = new SolidBrush(Color.DarkGray);
             this.whiteBrush = new SolidBrush(Color.White);
             this.IsToStopSorting = false;
-            this.IsArraySorted = false; 
+            this.IsArraySorted = false;
 
             //Determine the Duration of the Sleep. 
             this.sleepDuration = 0;
-            if (valuesArray.Length <= 200)
-                this.sleepDuration = 1;
-            if (valuesArray.Length <= 100)
-                this.sleepDuration = 5;
-            if (valuesArray.Length <= 20)
+            if (valuesArray.Length <= 50)
+                this.sleepDuration = 300;
+            else if (valuesArray.Length <= 100)
+                this.sleepDuration = 150;
+            else if (valuesArray.Length <= 300)
                 this.sleepDuration = 100;
+            else
+                this.sleepDuration = 0;
         }
         #endregion
 
@@ -118,18 +120,19 @@ namespace AlgorithmVisualizer
                         // New higher value.
                         prevHigherValIdx = j;
                     }
-                    else if (j == i - 1)
-                        g.FillRectangle(this.greenBrush, (j * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j], rectangleWidth, panelHeight);
+                    //else if (j == i - 1)
+                    //    g.FillRectangle(this.greenBrush, (j * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[j], rectangleWidth, panelHeight);
                 }
-                // Color the last element, which has been sorted in green.
-                g.FillRectangle(this.greenBrush, ((prevHigherValIdx) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
-                
+                // Color the last element, which has been sorted in gray.
+                g.FillRectangle(this.grayBrush, ((prevHigherValIdx) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
+                //g.FillRectangle(this.greenBrush, ((prevHigherValIdx) * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[prevHigherValIdx], rectangleWidth, panelHeight);
+
                 // Check if no swapped have occurred, therefore the Array has been completely sorted.
                 if (swapOccurred == false)
                 {
-                    // Color all the previous bars to green. Since they have been already sorted.
-                    for (int z = 0; z < i; z++)
-                        g.FillRectangle(this.greenBrush, (z * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[z], rectangleWidth, panelHeight);
+                    //// Color all the previous bars to green. Since they have been already sorted.
+                    //for (int z = 0; z < i; z++)
+                    //    g.FillRectangle(this.greenBrush, (z * rectangleWidth) + paddingFromSideMargins, panelHeight - valuesArray[z], rectangleWidth, panelHeight);
                     return;
                 }
             }

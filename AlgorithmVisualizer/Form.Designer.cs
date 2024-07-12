@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +42,8 @@
             this.buttonSort = new System.Windows.Forms.Button();
             this.textBoxSpeed = new System.Windows.Forms.TextBox();
             this.buttonStop = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSpeed)).BeginInit();
             this.SuspendLayout();
@@ -144,7 +147,7 @@
             // 
             // buttonSort
             // 
-            this.buttonSort.Location = new System.Drawing.Point(309, 46);
+            this.buttonSort.Location = new System.Drawing.Point(342, 46);
             this.buttonSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonSort.Name = "buttonSort";
             this.buttonSort.Size = new System.Drawing.Size(114, 34);
@@ -215,6 +218,8 @@
         private System.Windows.Forms.Button buttonSort;
         private System.Windows.Forms.TextBox textBoxSpeed;
         private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTip2;
     }
 }
 

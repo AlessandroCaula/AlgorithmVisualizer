@@ -33,7 +33,10 @@ namespace AlgorithmVisualizer
         public Form()
         {
             InitializeComponent();
-            LoadDefault();            
+            LoadDefault();
+            // Initialize the Graphic.
+            if (g == null)
+                g = panelGraphic.CreateGraphics();
             PopulateDropDownSortingAlgorithm();
             // Subscribe to the Shown event of the form to ensure that the form is fully loaded and displayed. 
             this.Shown += Form_Shown;
@@ -58,9 +61,6 @@ namespace AlgorithmVisualizer
             trackBarSpeed.Value = maxNumberOfEntries;
             textBoxSpeed.Text = maxNumberOfEntries.ToString();
             this.isFormSizeChanged = false;
-            // Initialize the Graphic.
-            if (g == null)
-                g = panelGraphic.CreateGraphics();
         }
         /// <summary>
         /// Populate the drop down that will list all the sorting algorithm.
@@ -104,8 +104,11 @@ namespace AlgorithmVisualizer
             if (g == null)
                 g = panelGraphic.CreateGraphics();
 
-            g.Clear(panelGraphic.BackColor);
+            //g.Clear(panelGraphic.BackColor);
 
+            panelGraphic.Invalidate();
+            panelGraphic.Update();
+            
             // Compute the width dimension of each rectangle.
             this.rectangleWidth = (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) != 0 ? (int)(Math.Floor(panelGraphic.Width / (double)numEntries)) : 1;
             // Compute the residual, not used pixels in the panel.

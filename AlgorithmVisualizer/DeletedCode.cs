@@ -515,9 +515,6 @@ namespace AlgorithmVisualizer
 
 
 
-
-
-
     // INSERTION SORT (MAYBE ????)
     //// Loop through the previous (temporary sorted) values.
     //for (int j = 0; j < i; j++)

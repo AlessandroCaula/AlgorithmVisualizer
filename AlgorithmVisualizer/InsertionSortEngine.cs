@@ -57,12 +57,14 @@ namespace AlgorithmVisualizer
 
             //Determine the Duration of the Sleep. 
             this.sleepDuration = 0;
-            if (valuesArray.Length <= 200)
-                this.sleepDuration = 1;
-            if (valuesArray.Length <= 100)
-                this.sleepDuration = 5;
-            if (valuesArray.Length <= 20)
+            if (valuesArray.Length <= 50)
+                this.sleepDuration = 300;
+            else if (valuesArray.Length <= 100)
+                this.sleepDuration = 150;
+            else if (valuesArray.Length <= 300)
                 this.sleepDuration = 100;
+            else
+                this.sleepDuration = 0;
         }
         #endregion
 
@@ -88,17 +90,31 @@ namespace AlgorithmVisualizer
                 int key = valuesArray[i];
                 int j = i - 1;
 
-                while (j >= 0 && valuesArray[j] > key)
+                // Shift the values higher than the key toward the right, making the space for the key value until this is in the temporary current place.
+                while (j >= 0 && key < valuesArray[j])
                 {
+                    // Check whether the Stop button is clicked, and the sorting must be stopped.
+                    if (this.IsToStopSorting)
+                        return;
+
                     RepaintCurrentBars(j + 1, j);
 
-                    // Exchange the position of the values. Copy the previous position to the current, shifting the array.
+                    // Shift to the right.
                     valuesArray[j + 1] = valuesArray[j];
-                    j--;
+
+                    // This exchange is just for visual representation, It can also be done when the exiting the while loop. 
+                    valuesArray[j] = key;
 
                     RepaintCurrentBars(j + 1, j);
+
+                    Thread.Sleep(sleepDuration);
+
+                    // Repaint these two selected values in Red.
+                    g.FillRectangle(this.grayBrush, ((j + 1) * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[j + 1], this.rectangleWidth, this.panelHeight);
+                    g.FillRectangle(this.grayBrush, (j * this.rectangleWidth) + paddingFromSideMargins, this.panelHeight - valuesArray[j], this.rectangleWidth, this.panelHeight);
+
+                    j--;
                 }
-                valuesArray[j + 1] = key;
             }
         }
 
