@@ -196,7 +196,7 @@ namespace AlgorithmVisualizer
         }
 
         /// <summary>
-        /// TUTORIAL: Action to be performed when the sort button is clicked.
+        /// Action to be performed when the sort button is clicked.
         /// </summary>
         private void buttonSort_Click1(object sender, EventArgs e)
         {
@@ -208,7 +208,7 @@ namespace AlgorithmVisualizer
             bgw.RunWorkerAsync(argument: comboBoxAlgorithmSelector.SelectedItem);
         }
         /// <summary>
-        /// TUTORIAL: Action performed when the Stop button is clicked.
+        /// Action performed when the Stop button is clicked.
         /// </summary>
         private void buttonStop_Click1(object sender, EventArgs e)
         {
