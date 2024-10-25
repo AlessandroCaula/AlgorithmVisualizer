@@ -12,6 +12,6 @@ A tool for visualizing various algorithms in real-time, by breaking them down in
 <br>
 
 <div style='display:flex; justify-content:space-between;'>
-    <img src='./AlgorithmVisualizer/assets/images/AlgorithmVisualizer_MS.gif' alt='gif1' width='500'>
-    <img src='./AlgorithmVisualizer/assets/images/AlgorithmVisualizer_BS.gif' alt='gif2' width='500'>
+    <img src='./AlgorithmVisualizer/assets/images/AlgorithmVisualizer_MS.gif' alt='gif1' style="flex: 1; max-width: 45%; height: auto;"/>
+    <img src='./AlgorithmVisualizer/assets/images/AlgorithmVisualizer_BS.gif' alt='gif2' style="flex: 1; max-width: 45%; height: auto;"/>
 </div>
